@@ -12,6 +12,7 @@ class IdeasController < ApplicationController
     @comment = @idea.comments.build
   end
 
+
   # GET /ideas/new
   def new
     @idea = Idea.new
