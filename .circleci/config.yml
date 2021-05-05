@@ -21,5 +21,10 @@ jobs:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run: rspec spec/controllers/ideas_controller_spec.rb
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
       - store_artifacts:
           path: coverage/.resultset.json
