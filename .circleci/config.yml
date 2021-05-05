@@ -10,4 +10,5 @@ jobs:
     steps:
       - checkout
       - run: bundle install
+      - run: gem install bundler
       - run: rspec spec/controllers/ideas_controller_spec.rb
