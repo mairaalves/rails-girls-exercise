@@ -27,4 +27,4 @@ jobs:
           path: /tmp/test-results
           destination: test-results
       - store_artifacts:
-          path: coverage/.resultset.json
+          path: coverage
