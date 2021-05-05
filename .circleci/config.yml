@@ -13,3 +13,5 @@ jobs:
       - run: gem install bundler
       - run: bundle install
       - run: rspec spec/controllers/ideas_controller_spec.rb
+      - store_artifacts:
+          path: coverage/.resultset.json
