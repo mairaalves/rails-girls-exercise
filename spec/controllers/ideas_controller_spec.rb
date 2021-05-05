@@ -6,7 +6,6 @@ RSpec.describe IdeasController do
     let(:responseJSON) { JSON.parse(response.body) }
 
     it "has all params " do
-      binding.pry
       post :create, params: parameters, format: :json
       expect(response).to have_http_status(:created)
 

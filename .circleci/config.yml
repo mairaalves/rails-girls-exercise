@@ -12,4 +12,4 @@ jobs:
       - run:
           name: Which bundler?
           command: bundle -v
-      - ruby/bundle-install
+      - run: rspec spec/controllers/ideas_controller_spec.rb
