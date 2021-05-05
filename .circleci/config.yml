@@ -9,9 +9,17 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-
       - run: sudo gem update --system
       - run: gem install bundler
       - run: bundle install
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run: rspec spec/controllers/ideas_controller_spec.rb
       - store_artifacts:
           path: coverage/.resultset.json
