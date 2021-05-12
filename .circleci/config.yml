@@ -45,8 +45,8 @@ jobs:
     working_directory: ~/repo
     docker:
       - image: circleci/ruby:2.7.0
-        environment:
-          RAILS_ENV: test
+        # environment:
+        #   RAILS_ENV: test
     environment:
       CC_TEST_REPORTER_ID: 902977eedc869e99334e17733205bcb66097eda306a50e89a2dba6520d13bc40
     steps:
