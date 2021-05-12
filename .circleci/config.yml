@@ -9,9 +9,54 @@ jobs:
     executor: ruby/default
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies-
       - run: sudo gem update --system
       - run: gem install bundler
       - run: bundle install
+      - run:
+          name: Install Code Climate Test Reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run: rspec spec/controllers/ideas_controller_spec.rb
+      - run:
+          name: Code Climate Test Coverage
+          command: |
+            ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+      - store_test_results:
+          path: /tmp/test-results
       - store_artifacts:
-          path: coverage/.resultset.json
+          path: /tmp/test-results
+          destination: test-results
+      - store_artifacts:
+          path: coverage
+      - persist_to_workspace:
+          root: coverage
+          paths:
+            - codeclimate.*.json
+  coverage:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/ruby:2.7.0
+        environment:
+          RAILS_ENV: test
+    environment:
+      CC_TEST_REPORTER_ID: 902977eedc869e99334e17733205bcb66097eda306a50e89a2dba6520d13bc40
+    steps:
+      - attach_workspace:
+          at: coverage
+      - run:
+          name: Sum and upload code coverage
+          command: |
+            wget https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+            mv test-reporter-latest-linux-amd64 cc-test-reporter
+            chmod +x ./cc-test-reporter
+            ./cc-test-reporter sum-coverage /home/circleci/repo/coverage/codeclimate.*.json
+            ./cc-test-reporter upload-coverage
