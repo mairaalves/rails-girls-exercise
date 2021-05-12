@@ -27,7 +27,8 @@ jobs:
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
       - run: 
           name: run tests
-          command: mkdir -p test-results/rspec test-artifacts
+          command: |
+            mkdir -p test-results/rspec test-artifacts
             ./cc-test-reporter before-build
             
             rspec spec/controllers/ideas_controller_spec.rb
